@@ -8,8 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 @Entity
@@ -27,5 +29,7 @@ public class Expense {
     private String expenseType;
     private BigDecimal amount;
     private LocalDate date;
+    @CreationTimestamp
+    private Timestamp creationDate;
 
 }
