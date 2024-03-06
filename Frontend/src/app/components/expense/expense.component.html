@@ -1,0 +1,43 @@
+ <div class="bootstrap-wrapper">
+    <div class="container-fliud">
+        <div class="row">
+            
+            <div class="col-md-2">
+                <mat-card class="mat-card">
+                <div class="add-expense">
+                    <input type="text" [(ngModel)]="newExpense.name" placeholder="Name">
+                    <input type="text" [(ngModel)]="newExpense.expenseType" placeholder="Expense Type">
+                    <input type="number" [(ngModel)]="newExpense.amount" placeholder="Amount">
+                    
+                    <input type="date" [(ngModel)]="newExpense.date">
+                    <button mat-raised-button color="primary" (click)="addExpense()">Add Expense</button>
+                  </div>
+                </mat-card>
+            </div>
+       
+       
+            <div class="col-md-8">
+                <mat-card class="mat-card">
+                <h2>Expenses</h2>
+                <div class="expense-list">
+                    <div *ngFor="let expense of expenses">
+                      <p>{{ expense.name }} - {{ expense.amount }}</p>
+                      <button mat-raised-button color="warn" (click)="deleteExpense(expense.id)">Delete</button>
+                    </div>
+                  </div>
+                </mat-card>
+            </div>
+           
+           
+            <div class="col-md-2">
+                <mat-card class="mat-card">
+                <div class="total-amount">
+                    Total Amount: {{ totalAmount }}
+                  </div>
+                </mat-card>
+            </div>
+  
+        </div>
+    </div>
+  </div>
+  

@@ -12,6 +12,7 @@ import java.time.Month;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/expenses")
 public class expenseController {
 
