@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {  Component, OnInit } from '@angular/core';
 import { Expense } from '../../models/expense.model';
 import { ExpenseService } from '../../services/expense.service';
 import { CommonModule } from '@angular/common';
@@ -7,39 +7,75 @@ import { HttpClientModule } from '@angular/common/http';
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
-
+import { MatInputModule } from '@angular/material/input';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { CategoryService } from '../../services/category.service';
+import { ExpenseCategory } from '../../models/expense-category.model';
+import {MatSelectModule} from '@angular/material/select';
+import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
+import { NavbarComponent } from "../navbar/navbar.component";
 
 @Component({
-  selector: 'app-expense',
-  standalone: true,
-  imports: [CommonModule,FormsModule,HttpClientModule,MatCardModule,MatButtonModule,MatFormFieldModule],
-  templateUrl: './expense.component.html',
-  styleUrl: './expense.component.scss'
+    selector: 'app-expense',
+    standalone: true,
+    templateUrl: './expense.component.html',
+    styleUrl: './expense.component.scss',
+    imports: [CommonModule, FormsModule, HttpClientModule, MatCardModule, MatButtonModule,
+        MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule,
+        MatSelectModule, RouterLink, NavbarComponent]
 })
 export class ExpenseComponent implements OnInit {
+
+  displayedColumns: string[] = ['name', 'category', 'amount', 'date','Action'];
+
+
+
+  categories:ExpenseCategory[]=[
+    {
+      cid: 0,
+      name: ""
+    }
+  ]
+
   expenses: Expense[]=[{
     id:1,
     name: '',
-    expenseType: '',
     amount: 0,
     date: new Date(),
-    creationDate: new Date()
+    category:{
+      cid: 0,
+      name: ''
+    }
   }];
   newExpense: Expense = {
-    id:1,
+    id: 1,
     name: '',
-    expenseType: '',
     amount: 0,
     date: new Date(),
-    creationDate: new Date()
+    category: {
+      cid: 0,
+      name: ''
+    }
   };
   totalAmount: number=0;
+  categoryId: number = 1;
+  expenseId:number=1;
 
-  constructor(private expenseService: ExpenseService) { }
+
+  constructor(private expenseService: ExpenseService,private categoryService:CategoryService,private router:Router) { }
 
   ngOnInit(): void {
     this.loadExpenses();
     this.getTotalAmount();
+   this.categoryService.getAllCategories().subscribe((data:any)=>{
+        this.categories=data;
+    },
+    (error)=>{
+      console.log(error);
+    }
+    )
   }
 
   loadExpenses(): void {
@@ -55,10 +91,12 @@ export class ExpenseComponent implements OnInit {
       this.newExpense = {
         id:1,
         name: '',
-        expenseType: '',
         amount: 0,
     date: new Date(),
-    creationDate: new Date()
+    category:{
+      cid: 0,
+      name: ''
+    }
       };
     });
   }
@@ -75,21 +113,27 @@ export class ExpenseComponent implements OnInit {
       this.totalAmount = total;
     });
   }
-  filterExpensesByYearMonthAndType(year: number, month: number, expenseType: string): void {
-    this.expenseService.getExpensesByYearMonthAndType(year, month, expenseType).subscribe(expenses => {
-      this.expenses = expenses;
-    });
+
+  getExpensesByCategory(categoryId: number): void {
+    this.expenseService.getExpensesByCategory(categoryId)
+      .subscribe(data => {
+        this.expenses = data;
+      });
   }
 
-  filterExpensesByYearMonth(year: number, month: number): void {
-    this.expenseService.getExpensesByYearMonth(year, month).subscribe(expenses => {
-      this.expenses = expenses;
-    });
+  updateExpense(id: number, updatedExpense: Expense): void {
+    this.expenseService.updateExpense(id, updatedExpense).subscribe(
+      (data: Expense) => {
+        const index = this.expenses.findIndex(expense => expense.id === id);
+        if (index !== -1) {
+          this.expenses[index] = data;
+        }
+        this.router.navigate(['/update-expense',id]); 
+      },
+      (error) => {
+        console.error('Error updating expense: ', error);
+      }
+    );
   }
-
-  filterExpensesByType(expenseType: string): void {
-    this.expenseService.getExpensesByType(expenseType).subscribe(expenses => {
-      this.expenses = expenses;
-    });
-  }
+  
 }

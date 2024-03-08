@@ -1,16 +1,14 @@
 package amit.expenseTracker.Backend.Service;
 
+import amit.expenseTracker.Backend.Model.Category;
 import amit.expenseTracker.Backend.Model.Expense;
 import amit.expenseTracker.Backend.Repository.expenseRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -18,8 +16,6 @@ public class expenseService {
 
     @Autowired
     private expenseRepo expenseRepo;
-
-
 
     public Expense save(Expense entity) {
         return expenseRepo.save(entity);
@@ -29,7 +25,7 @@ public class expenseService {
         return expenseRepo.findAll();
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         expenseRepo.deleteById(id);
     }
 
@@ -43,20 +39,28 @@ public class expenseService {
 
     }
 
-    public Page<Expense> getExpensesByYearMonthAndType(int year, Month month, String expenseType, Pageable page) {
-        LocalDate startDate = LocalDate.of(year, month, 1);
-        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
-        return expenseRepo.findByDateBetweenAndExpenseTypeOrderByCreationDateDesc(startDate, endDate, expenseType, page);
+    public List<Expense> findExpensesByCategory(Category category){
+        return this.expenseRepo.findBycategory(category);
     }
 
-    public Page<Expense> getExpensesByYearMonth(int year, Month month, Pageable page) {
-        LocalDate startDate = LocalDate.of(year, month, 1);
-        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
-        return expenseRepo.findByDateBetweenOrderByCreationDateDesc(startDate, endDate, page);
+    public Expense update(Long id, Expense updatedExpense) {
+        Optional<Expense> optionalExpense = this.expenseRepo.findById(id);
+        if (optionalExpense.isPresent()) {
+            Expense existingExpense=optionalExpense.get();
+            existingExpense.setName(updatedExpense.getName());
+            existingExpense.setAmount(updatedExpense.getAmount());
+            existingExpense.setDate(updatedExpense.getDate());
+            existingExpense.setCategory(updatedExpense.getCategory());
+            return this.expenseRepo.save(existingExpense);
+        }
+        else {
+            return null;
+        }
     }
 
 
-    public Page<Expense> getExpensesByType(String expenseType, Pageable page) {
-        return expenseRepo.findByExpenseTypeOrderByCreationDateDesc(expenseType, page);
+    public Expense findById(Long id) {
+        Optional<Expense> expense = expenseRepo.findById(id);
+        return expense.orElse(null);
     }
 }

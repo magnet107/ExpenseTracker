@@ -1,42 +1,82 @@
+ <app-navbar></app-navbar>
  <div class="bootstrap-wrapper">
     <div class="container-fliud">
         <div class="row">
-            
-            <div class="col-md-2">
+            <div class="col-md-3">
+              <mat-card class="mat-card">
+                <h2 class="total-amount">
+                  Total Expense: Rs {{ totalAmount }}
+                </h2>
+              </mat-card>
                 <mat-card class="mat-card">
                 <div class="add-expense">
-                    <input type="text" [(ngModel)]="newExpense.name" placeholder="Name">
-                    <input type="text" [(ngModel)]="newExpense.expenseType" placeholder="Expense Type">
-                    <input type="number" [(ngModel)]="newExpense.amount" placeholder="Amount">
-                    
-                    <input type="date" [(ngModel)]="newExpense.date">
-                    <button mat-raised-button color="primary" (click)="addExpense()">Add Expense</button>
+                  <h2>Add New Expense</h2>
+                    <mat-form-field  class="mat-form-field" appearance="outline" class="field">
+                      <input matInput
+                    type="text"  
+                    name="name"[(ngModel)]="newExpense.name" 
+                    placeholder="Name">
+                  </mat-form-field>
+                  <mat-form-field class="mat-form-field"  appearance="outline" class="field">
+                    <mat-label>Choose a category</mat-label>
+                    <mat-select name="category" [(ngModel)]="newExpense.category.cid" >
+                      <mat-option *ngFor="let c of categories" [value]="c.cid">{{c.name}}</mat-option>
+                    </mat-select> 
+                  </mat-form-field>
+                    <mat-form-field class="mat-form-field"  appearance="outline" class="field">
+                      <input matInput
+                      type="number"  
+                      name="amount" [(ngModel)]="newExpense.amount" 
+                      placeholder="Amount"></mat-form-field>
+                      <mat-form-field  class="mat-form-field"  appearance="outline" class="field">
+                        <input matInput [matDatepicker]="picker" [(ngModel)]="newExpense.date" type="text" placeholder="Pick a date">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                      </mat-form-field>
+                    <button mat-raised-button color="primary"  (click)="addExpense()">Add Expense</button>
                   </div>
                 </mat-card>
-            </div>
-       
-       
-            <div class="col-md-8">
                 <mat-card class="mat-card">
-                <h2>Expenses</h2>
-                <div class="expense-list">
-                    <div *ngFor="let expense of expenses">
-                      <p>{{ expense.name }} - {{ expense.amount }}</p>
-                      <button mat-raised-button color="warn" (click)="deleteExpense(expense.id)">Delete</button>
-                    </div>
-                  </div>
+                  <h2>Filter by Category</h2>
+                  <mat-form-field  class="mat-form-field" appearance="outline">
+                    <mat-label>Select Category</mat-label>
+                    <mat-select name="category" [(ngModel)]="categoryId">
+                      <mat-option *ngFor="let category of categories" [value]="category.cid">{{ category.name }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <div class="button">
+                  <button  style="margin-left: 35px;" mat-button color="warn" (click)="getExpensesByCategory(categoryId)"
+                  >Filter</button>
+                  <button style="margin-left: 25px;" mat-button color="primary" routerLink="/category"
+                  >Add Category</button>
+                </div>
                 </mat-card>
-            </div>
-           
-           
-            <div class="col-md-2">
+            </div> 
+            <div class="col-md-9">
                 <mat-card class="mat-card">
-                <div class="total-amount">
-                    Total Amount: {{ totalAmount }}
-                  </div>
-                </mat-card>
+                   <h2 style="text-align: center;font-size: xx-large;">Expenses</h2>
+               <div class="expense-list">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                          <th *ngFor="let c of displayedColumns">{{c}}</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let e of expenses">
+                          <td>{{e.name}}</td>
+                          <td>{{e.category.name}}</td>
+                          <td>{{e.amount}}</td>
+                          <td>{{e.date}}</td>
+                          <td><button mat-button color="warn" (click)="deleteExpense(e.id)">Delete</button>
+                            <button mat-button color="primary" (click)="updateExpense(e.id,e)">Update</button>
+                          </td>
+                      </tr>
+                  </tbody>
+                  </table>
+                </div>
+            </mat-card>
             </div>
-  
         </div>
     </div>
   </div>

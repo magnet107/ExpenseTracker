@@ -1,14 +1,14 @@
 package amit.expenseTracker.Backend.Controller;
 
+import amit.expenseTracker.Backend.Model.Category;
 import amit.expenseTracker.Backend.Model.Expense;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import amit.expenseTracker.Backend.Service.expenseService;
 
 import java.math.BigDecimal;
-import java.time.Month;
 import java.util.List;
 
 @RestController
@@ -30,7 +30,7 @@ public class expenseController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteExpense(@PathVariable("id") Integer id) {
+    public void deleteExpense(@PathVariable("id") Long id) {
         this.expenseService.deleteById(id);
     }
 
@@ -39,18 +39,31 @@ public class expenseController {
         return this.expenseService.getTotalAmount(expenseService.findAll());
     }
 
-    @GetMapping("/filter/year/{year}/month/{month}/type/{expenseType}")
-    public Page<Expense> getExpensesByYearMonthAndType(@PathVariable int year, @PathVariable Month month, @PathVariable String expenseType, Pageable page) {
-        return this.expenseService.getExpensesByYearMonthAndType(year, month, expenseType, page);
+    @GetMapping("/filter/{id}")
+    public List<Expense> getExpensesOfCategory(@PathVariable Long id){
+        Category category=new Category();
+        category.setCid(id);
+        return this.expenseService.findExpensesByCategory(category);
     }
 
-    @GetMapping("/filter/year/{year}/month/{month}")
-    public Page<Expense> getExpensesByYearMonth(@PathVariable int year, @PathVariable Month month, Pageable page) {
-        return this.expenseService.getExpensesByYearMonth(year, month, page);
+    @GetMapping("/{id}")
+    public ResponseEntity<Expense> getExpenseById(@PathVariable Long id) {
+        Expense expense = expenseService.findById(id);
+        if (expense != null) {
+            return new ResponseEntity<>(expense, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @GetMapping("/filter/type/{expenseType}")
-    public Page<Expense> getExpensesByType(@PathVariable String expenseType, Pageable page) {
-        return this.expenseService.getExpensesByType(expenseType, page);
+    @PutMapping("/{id}")
+    public ResponseEntity<Expense> updateCategory(@PathVariable Long id, @RequestBody Expense expense) {
+        Expense updatedExpense = expenseService.update(id, expense);
+        if (updatedExpense != null) {
+            return new ResponseEntity<>(updatedExpense, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
 }

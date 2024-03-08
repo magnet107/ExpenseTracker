@@ -14,19 +14,19 @@ body {
   padding: 20px;
 }
 
-/* Card styles */
 mat-card {
   margin-bottom: 20px;
   padding: 15px;
   border-radius: 4px;
-  box-shadow: 0 2px 5px black;
+  box-shadow: 0 5px 15px black;
 }
 
-/* Add expense section */
+
 .add-expense {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: 1fr;  
+  place-items: center; 
+  padding-top: 10px;
 
   input {
     padding: 5px;
@@ -36,12 +36,11 @@ mat-card {
   }
 
   button {
-    width: 100%;
     margin-top: 10px;
+    height: 55px;
   }
 }
 
-/* Expense list section */
 .expense-list {
   display: flex;
   flex-direction: column;
@@ -54,15 +53,22 @@ mat-card {
   }
 }
 
-/* Total amount section */
+
 .total-amount {
   font-weight: bold;
+  text-align: center;
+  font-size: x-large;
 }
 
-/* Media queries (optional) */
 @media (max-width: 768px) {
   .col-md-2,
   .col-md-8 {
     flex: 1;
   }
 }
+
+.field{
+  width: 75%;
+
+}
+

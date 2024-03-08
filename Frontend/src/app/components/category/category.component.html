@@ -1,0 +1,50 @@
+<app-navbar></app-navbar>
+<div class="bootstrap-wrapper" style="margin-top: 30px;">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <mat-card class="mat-card">
+                    <div class="add-category">
+                    <h2>Add New Category</h2>
+                    <div class="form-group">
+                      <mat-form-field class="mat-form-field" style="margin-left: 55px;" appearance="outline">
+                        <mat-label>Category Name</mat-label>
+                        <input matInput type="text" [(ngModel)]="newCategoryName.name" name="newCategoryName">
+                      </mat-form-field>
+                      <button mat-raised-button style="margin-left: 90px;"  color="primary" (click)="addCategory(newCategoryName.name)">Add Category</button>
+                    </div>
+                </div>
+                  </mat-card>
+            </div>
+            <div class="col-md-9">
+                
+
+                  <mat-card class="mat-card">
+                    <h2>Expense Categories</h2>
+                    <table class="table table-bordered text-center">
+                        <thead>
+                        <tr>
+                            <th *ngFor="let c of categories">{{c}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let category of expenseCategories">
+                            <td>{{category.name}}</td>
+                            <td><button mat-button color="warn" (click)="deleteCategory(category.cid)">Delete</button>
+                                <button style="padding-left: 50px;" mat-button color="primary" (click)="updateCategory(category.cid, category.name)">Update</button>
+                            </td>
+                            
+                        </tr>
+                    </tbody>
+                    </table>
+                    <button mat-raised-button routerLink="/expense" color="primary">Expenses</button>
+                </mat-card>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+  

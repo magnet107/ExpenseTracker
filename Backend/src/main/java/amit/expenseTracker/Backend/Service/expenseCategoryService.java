@@ -1,13 +1,11 @@
 package amit.expenseTracker.Backend.Service;
 
 
-import amit.expenseTracker.Backend.Model.ExpenseCategory;
+import amit.expenseTracker.Backend.Model.Category;
 import amit.expenseTracker.Backend.Repository.expenseCategoryRepo;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class expenseCategoryService {
@@ -15,38 +13,32 @@ public class expenseCategoryService {
     @Autowired
     private expenseCategoryRepo expenseCategoryRepo;
 
-    public ExpenseCategory findById(Integer id) {
-        return expenseCategoryRepo.findById(id).get();
-
+    public Category findById(Long id) {
+        Optional<Category> expenseCategoryOptional = expenseCategoryRepo.findById(id);
+        return expenseCategoryOptional.orElse(null);
     }
 
-
-    public ExpenseCategory Add(ExpenseCategory entity)  {
-
-        return expenseCategoryRepo.save(entity);
-
+    public Category add(Category category) {
+        return expenseCategoryRepo.save(category);
     }
 
-    @PostConstruct
-    public void init() {
-        Iterable<ExpenseCategory> allExpenses = expenseCategoryRepo.findAll();
-        if (((Collection<?>) allExpenses).isEmpty()) {
-            ExpenseCategory defaultExpenseType = new ExpenseCategory(1, "Home");
-            expenseCategoryRepo.save(defaultExpenseType);
-        }
-    }
-
-
-    public Iterable<ExpenseCategory> findAll() {
+    public Iterable<Category> findAll() {
         return expenseCategoryRepo.findAll();
     }
 
-    public void deleteById(Integer id) {
-        ExpenseCategory expenseTypeToBeDeleted = findById(id);
-        expenseCategoryRepo.delete(expenseTypeToBeDeleted);
+    public void deleteById(Long id) {
+        expenseCategoryRepo.deleteById(id);
     }
 
+    public Category update(Long id, Category updatedCategory) {
+        Optional<Category> optionalExpenseCategory = expenseCategoryRepo.findById(id);
+        if (optionalExpenseCategory.isPresent()) {
+            Category existingCategory = optionalExpenseCategory.get();
+            existingCategory.setName(updatedCategory.getName());
+            return expenseCategoryRepo.save(existingCategory);
+        }
+        return null;
 
-
+    }
 
 }

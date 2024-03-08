@@ -1,15 +1,11 @@
 package amit.expenseTracker.Backend.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -19,6 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Setter
 @Getter
+@Table(name = "expense")
 public class Expense {
 
 
@@ -26,10 +23,12 @@ public class Expense {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     private String name;
-    private String expenseType;
     private BigDecimal amount;
     private LocalDate date;
     @CreationTimestamp
     private Timestamp creationDate;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Category category;
 
 }

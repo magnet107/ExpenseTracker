@@ -1,0 +1,16 @@
+<app-navbar></app-navbar>
+<div class="bootstrap-wrapper">
+    <div class="container">
+        <mat-card class="mat-card">
+            <h2>Update Category</h2>
+            <mat-form-field  class="mat-form-field" appearance="outline">
+                <mat-label>Category</mat-label>
+                <input matInput type="text" [(ngModel)]="category.name">
+            </mat-form-field>
+            <div class="button">
+            <button mat-raised-button color="primary" (click)="updateCategory()">Update</button>
+            <button mat-raised-button color="warn"  style="margin-left: 5px;" routerLink="/expense">Cancel</button>
+        </div>
+        </mat-card>
+    </div>
+  </div>

@@ -28,15 +28,16 @@ export class ExpenseService {
     return this.http.get<number>(`${this.baseUrl}/totalAmount`);
   }
 
-  getExpensesByYearMonthAndType(year: number, month: number, expenseType: string): Observable<Expense[]> {
-    return this.http.get<Expense[]>(`${this.baseUrl}/filter/year/${year}/month/${month}/type/${expenseType}`);
+  getExpensesByCategory(categoryId: number): Observable<Expense[]> {
+    return this.http.get<Expense[]>(`${this.baseUrl}/filter/${categoryId}`);
   }
 
-  getExpensesByYearMonth(year: number, month: number): Observable<Expense[]> {
-    return this.http.get<Expense[]>(`${this.baseUrl}/filter/year/${year}/month/${month}`);
+  updateExpense(id: number, expense: Expense): Observable<Expense> {
+    return this.http.put<Expense>(`${this.baseUrl}/${id}`, expense);
   }
 
-  getExpensesByType(expenseType: string): Observable<Expense[]> {
-    return this.http.get<Expense[]>(`${this.baseUrl}/filter/type/${expenseType}`);
+  getExpense(id:number):Observable<Expense>{
+    return this.http.get<Expense>(`${this.baseUrl}/${id}`);
   }
+
 }
